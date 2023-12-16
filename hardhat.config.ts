@@ -13,7 +13,9 @@ const POLYGONSCAN_API_KEY =
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "api-key";
 
 const config: HardhatUserConfig = {
-	solidity: "0.8.20",
+	solidity: {
+		compilers: [{ version: "0.8.20" }, { version: "0.4.19" }],
+	},
 	defaultNetwork: "hardhat",
 	networks: {
 		hardhat: {
