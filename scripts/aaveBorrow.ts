@@ -1,5 +1,6 @@
 import { ethers, getNamedAccounts, network } from "hardhat";
 import {
+	AggregatorV3Interface,
 	IERC20,
 	ILendingPool,
 	ILendingPoolAddressesProvider,
@@ -34,6 +35,21 @@ async function main() {
 		lendingPool,
 		deployer,
 	);
+
+	const daiPrice = await getDaiPrice();
+}
+
+async function getDaiPrice() {
+	const daiEthPriceFeed: AggregatorV3Interface = await ethers.getContractAt(
+		"AggregatorV3Interface",
+		networkConfig[network.config!.chainId!].daiEthPriceFeed!,
+		// ! Don't need to connect to deployer because we are only reading from this contract,
+		// !and not sending transactions
+	);
+
+	const price = (await daiEthPriceFeed.latestRoundData()).answer;
+	console.log("DAI/ETH price is -> ", price);
+	return price;
 }
 
 async function getBorrowUserData(

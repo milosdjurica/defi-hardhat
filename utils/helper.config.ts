@@ -1,11 +1,11 @@
 export interface networkConfigItem {
-	name?: string;
-	wethToken?: string;
-	lendingPoolAddressesProvider?: string;
-	daiEthPriceFeed?: string;
-	daiToken?: string;
-	blockConfirmations?: number;
-	ethUsdPriceFeed?: string;
+	name: string;
+	wethToken: string;
+	lendingPoolAddressesProvider: string;
+	daiEthPriceFeed: string;
+	daiToken: string;
+	// blockConfirmations: number;
+	// ethUsdPriceFeed: string;
 }
 
 export interface networkConfigInfo {
