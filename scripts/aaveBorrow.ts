@@ -29,6 +29,24 @@ async function main() {
 	console.log("Depositing......");
 	await lendingPool.deposit(wethTokenAddress, AMOUNT, deployer, 0);
 	console.log("Deposited !!!");
+
+	let { totalDebtETH, availableBorrowsETH } = await getBorrowUserData(
+		lendingPool,
+		deployer,
+	);
+}
+
+async function getBorrowUserData(
+	lendingPool: ILendingPool,
+	account: HardhatEthersSigner,
+): Promise<{ totalDebtETH: bigint; availableBorrowsETH: bigint }> {
+	const { totalCollateralETH, totalDebtETH, availableBorrowsETH } =
+		await lendingPool.getUserAccountData(account);
+
+	console.log(`You have ${totalCollateralETH} worth of ETH deposited!`);
+	console.log(`You have ${totalDebtETH} worth of ETH borrowed!`);
+	console.log(`You can borrow  ${availableBorrowsETH} worth of ETH!`);
+	return { totalDebtETH, availableBorrowsETH };
 }
 
 async function approveERC20(
