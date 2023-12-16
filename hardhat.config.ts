@@ -5,7 +5,8 @@ import "dotenv/config";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 
-const SEPOLIA_RPC_URL = process.env.SEPOLIA_PROCESS_ENV || "";
+const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL || "";
+const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL || "";
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xKEY";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "api-key";
 const POLYGONSCAN_API_KEY =
@@ -14,12 +15,19 @@ const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "api-key";
 
 const config: HardhatUserConfig = {
 	solidity: {
-		compilers: [{ version: "0.8.20" }, { version: "0.4.19" }],
+		compilers: [
+			{ version: "0.8.20" },
+			{ version: "0.6.12" },
+			{ version: "0.4.19" },
+		],
 	},
 	defaultNetwork: "hardhat",
 	networks: {
 		hardhat: {
 			chainId: 31337,
+			forking: {
+				url: MAINNET_RPC_URL,
+			},
 			// blockConfirmations: 3
 		},
 		// for working with yarn hardhat node !
