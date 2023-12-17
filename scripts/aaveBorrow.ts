@@ -45,18 +45,28 @@ async function main() {
 	const amountDaiToBorrowWei = ethers.parseEther(amountDaiToBorrow.toString());
 
 	console.log("amountDaiToBorrowWei", amountDaiToBorrowWei);
+	const daiAddress = networkConfig[network.config.chainId!].daiToken;
+
+	await borrowDai(
+		daiAddress,
+		lendingPool,
+		amountDaiToBorrowWei.toString(),
+		deployer,
+	);
+
+	await getBorrowUserData(lendingPool, deployer);
 }
 
 async function borrowDai(
 	daiAddress: string,
 	lendingPool: ILendingPool,
-	amountDaiToBorrowWei: bigint,
+	amountDaiToBorrowWei: string,
 	account: HardhatEthersSigner,
 ) {
 	const borrowTx = await lendingPool.borrow(
 		daiAddress,
 		amountDaiToBorrowWei,
-		1,
+		2,
 		0,
 		account,
 	);
