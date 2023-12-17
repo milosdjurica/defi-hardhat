@@ -37,6 +37,33 @@ async function main() {
 	);
 
 	const daiPrice = await getDaiPrice();
+	const amountDaiToBorrow =
+		availableBorrowsETH.toString() * 0.95 * (1 / daiPrice.toString());
+
+	console.log(`Can borrow -> ${amountDaiToBorrow} DAI`);
+
+	const amountDaiToBorrowWei = ethers.parseEther(amountDaiToBorrow.toString());
+
+	console.log("amountDaiToBorrowWei", amountDaiToBorrowWei);
+}
+
+async function borrowDai(
+	daiAddress: string,
+	lendingPool: ILendingPool,
+	amountDaiToBorrowWei: bigint,
+	account: HardhatEthersSigner,
+) {
+	const borrowTx = await lendingPool.borrow(
+		daiAddress,
+		amountDaiToBorrowWei,
+		1,
+		0,
+		account,
+	);
+
+	await borrowTx.wait(1);
+
+	console.log("You have borrowed!");
 }
 
 async function getDaiPrice() {
