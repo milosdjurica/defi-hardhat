@@ -42,30 +42,52 @@ async function main() {
 
 	console.log(`Can borrow -> ${amountDaiToBorrow} DAI`);
 
-	const amountDaiToBorrowWei = ethers.parseEther(amountDaiToBorrow.toString());
+	const amountDaiToBorrowInWei = ethers.parseEther(
+		amountDaiToBorrow.toString(),
+	);
 
-	console.log("amountDaiToBorrowWei", amountDaiToBorrowWei);
+	console.log("amountDaiToBorrowInWei", amountDaiToBorrowInWei);
 	const daiAddress = networkConfig[network.config.chainId!].daiToken;
 
 	await borrowDai(
 		daiAddress,
 		lendingPool,
-		amountDaiToBorrowWei.toString(),
+		amountDaiToBorrowInWei.toString(),
 		deployer,
 	);
 
 	await getBorrowUserData(lendingPool, deployer);
+	await repay(amountDaiToBorrowInWei, daiAddress, lendingPool, deployer);
+	await getBorrowUserData(lendingPool, deployer);
+}
+
+async function repay(
+	amount: bigint,
+	daiAddress: string,
+	lendingPool: ILendingPool,
+	account: HardhatEthersSigner,
+) {
+	await approveERC20(
+		daiAddress,
+		await lendingPool.getAddress(),
+		amount,
+		account,
+	);
+
+	const repayTx = await lendingPool.repay(daiAddress, amount, 2, account);
+	await repayTx.wait(1);
+	console.log("Repaid");
 }
 
 async function borrowDai(
 	daiAddress: string,
 	lendingPool: ILendingPool,
-	amountDaiToBorrowWei: string,
+	amountDaiToBorrowInWei: string,
 	account: HardhatEthersSigner,
 ) {
 	const borrowTx = await lendingPool.borrow(
 		daiAddress,
-		amountDaiToBorrowWei,
+		amountDaiToBorrowInWei,
 		2,
 		0,
 		account,
